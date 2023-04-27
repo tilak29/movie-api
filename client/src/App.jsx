@@ -4,23 +4,38 @@ import axios from 'axios'
 // import * as dotenv from 'dotenv' 
 
 
-const options = {
-  method: 'GET',
-  url: 'https://moviesdatabase.p.rapidapi.com/titles',
-  headers: {
-    'X-RapidAPI-Key': import.meta.env.VITE_API_KEY,
-    'X-RapidAPI-Host': 'moviesdatabase.p.rapidapi.com'
-  }
-};
+// const options = {
+//   method: 'GET',
+//   url: 'https://moviesdatabase.p.rapidapi.com/titles',
+//   headers: {
+//     'X-RapidAPI-Key': import.meta.env.VITE_API_KEY,
+//     'X-RapidAPI-Host': 'moviesdatabase.p.rapidapi.com'
+//   }
+// };
 
-const options1 = {
-  method: 'GET',
-  url: 'https://moviesdatabase.p.rapidapi.com/actors',
-  headers: {
-    'X-RapidAPI-Key': import.meta.env.VITE_API_KEY,
-    'X-RapidAPI-Host': 'moviesdatabase.p.rapidapi.com'
-  }
-};
+// const options1 = {
+//   method: 'GET',
+//   url: 'https://moviesdatabase.p.rapidapi.com/actors',
+//   headers: {
+//     'X-RapidAPI-Key': import.meta.env.VITE_API_KEY,
+//     'X-RapidAPI-Host': 'moviesdatabase.p.rapidapi.com'
+//   }
+// };
+
+
+// instagram -- cant do it this way add this in useEffect
+// const options2 = ({
+//   method: 'get',
+//   url: import.meta.env.VITE_INSTA_URL, 
+//   params: {},
+// }).then(function (response) {
+//       // handle success
+//       console.log(response.data);
+//       // setActors(response.data.data);
+// }).catch(function (error) {
+//       // handle error
+//       console.log(error);
+// })
 
 function App() {
   const [movies, setMovies] = useState([]);
@@ -43,22 +58,39 @@ function App() {
   //     console.error(error);
   //   }); },[])
 
+
 //Multiple Axios request in same useEffect:
 //https://stackoverflow.com/questions/61385454/how-to-post-multiple-axios-requests-at-the-same-time
-  useEffect(() => {
-  axios.all([
-    axios.request(options), 
-    axios.request(options1)
-  ])
-  .then(axios.spread((obj1, obj2) => {
-    // Both requests are now complete
-    console.log(obj1.data.results),
-    setMovies(obj1.data.results),
-    console.log(obj2.data.results),
-    setActors(obj2.data.results)
-  }));
-}, [])
+
+//   useEffect(() => {
+//   axios.all([
+//     axios.request(options), 
+//     axios.request(options1)
+//   ])
+//   .then(axios.spread((obj1, obj2) => {
+//     // Both requests are now complete
+//     console.log(obj1.data.results),
+//     setMovies(obj1.data.results),
+//     console.log(obj2.data.results),
+//     setActors(obj2.data.results)
+//   }));
+// }, [])
   
+
+// instagram
+useEffect(() => {
+  axios({
+    method: 'get',
+    url: import.meta.env.VITE_INSTA_URL, 
+    params: {},
+}).then(function (response) {
+        // handle success
+        //console.log(response.data);
+        setActors(response.data.data)
+}).catch(function (error) {
+        // handle error
+        console.log(error);
+}) },[])
 
   return (
     <div style={{color:"white"}}>
@@ -68,19 +100,24 @@ function App() {
       {
         actors.map((val) => {
             return(
-              <div key={val.nconst}>
               
-              <p>Actor name: {val.primaryName} | 
-              birthday: {val.birthYear}
+              <div key={val.id}>
+              <a href={val.permalink}>
+              <img src={val.media_url}>
+              </img>
+              <p>
+              caption: {val.caption}
               </p>
+              </a>
               </div>
+             
             )
         })
       }
 
 
       {/* title api */}
-      {
+      {/* {
         movies.map((val) => {
             return(
               <div key={val.id}>
@@ -90,7 +127,7 @@ function App() {
               </div>
             )
         })
-      }
+      } */}
 
 {/* https://www.youtube.com/watch?v=V0KsFee5iSc */}
 
